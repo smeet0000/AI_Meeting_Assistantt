@@ -3,12 +3,8 @@ from fastapi import APIRouter, HTTPException
 from api.schemas.chat import ChatRequest
 from api.schemas.responses import ChatResponse
 from api.services.rag_session import get_chain
-
 from core.rag_engine import ask_question
-
 from api.exceptions import PipelineException
-from api.core.logger import logger
-
 
 router = APIRouter(
     prefix="/chat",
@@ -32,14 +28,10 @@ def chat(request: ChatRequest):
 
     try:
 
-        logger.info(f"Question : {request.question}")
-
         answer = ask_question(
             rag_chain,
             request.question
         )
-
-        logger.info("Answer generated successfully.")
 
         return {
             "question": request.question,
@@ -47,9 +39,4 @@ def chat(request: ChatRequest):
         }
 
     except Exception as e:
-
-        logger.error(str(e))
-
-        raise PipelineException(
-            detail=str(e)
-        )
+        raise PipelineException(detail=str(e))
