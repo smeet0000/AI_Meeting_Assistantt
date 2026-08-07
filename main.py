@@ -8,9 +8,6 @@ from core.rag_engine import build_rag_chain,ask_question
 import os
 
 
-# print('KEY LOADED:',os.getenv('SARVAM_API_KEY'))
-# print('CWD: ',os.getcwd())
-
 def run_pipeline(source: str,language:str ='english')-> dict:
     print('starting AI video Assistant')
 

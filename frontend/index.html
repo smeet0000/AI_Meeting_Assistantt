@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>AI Video Assistant</title>
+</head>
+
+<body>
+
+    <h2>AI Video Assistant</h2>
+
+    <!-- File Upload -->
+    <input
+        type="file"
+        id="videoFile"
+        accept="audio/*,video/*"
+    >
+
+    <br>
+    <br>
+
+    <!-- Analyze Button -->
+    <button
+        id="analyzeBtn"
+        type="button"
+    >
+        Analyze
+    </button>
+
+    <hr>
+
+    <!-- Title -->
+    <h3>Title</h3>
+    <p id="title"></p>
+
+    <!-- Summary -->
+    <h3>Summary</h3>
+    <p id="summary"></p>
+
+    <!-- Action Items -->
+    <h3>Action Items</h3>
+    <p id="actionItems"></p>
+
+    <!-- Key Decisions -->
+    <h3>Key Decisions</h3>
+    <p id="keyDecisions"></p>
+
+    <!-- Open Questions -->
+    <h3>Open Questions</h3>
+    <p id="openQuestions"></p>
+
+    <!-- Transcript -->
+    <h3>Transcript</h3>
+
+    <textarea
+        id="transcript"
+        rows="15"
+        cols="100"
+        readonly
+    ></textarea>
+
+    <!-- JavaScript -->
+    <script src="./app.js"></script>
+
+</body>
+
+</html>

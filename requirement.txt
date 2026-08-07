@@ -26,7 +26,8 @@ chromadb>=0.5.0                   # Local vector store
 sentence-transformers>=3.0.0      # HuggingFace embedding models
 langchain-huggingface>=0.0.3      # LangChain ↔ HuggingFace embeddings bridge
 huggingface-hub>=0.23.0           # Model downloading from HuggingFace Hub
-tiktoken>=0.7.0                   # Token counting for text splitting
+tiktoken>=0.7.0    
+langchain_chroma               # Token counting for text splitting
 
 # ── Streamlit UI ──────────────────────────────────────────────────────────────
 streamlit>=1.35.0
@@ -42,3 +43,9 @@ python-dotenv>=1.0.0              # Load API keys from .env
 numpy>=1.26.0
 tqdm>=4.66.0                      # Progress bars
 requests>=2.32.0
+
+rank-b25
+sentence-transformers
+fastapi
+uvicorn
+python-multipart

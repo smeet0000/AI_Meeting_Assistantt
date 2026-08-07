@@ -1,5 +1,6 @@
 #Actionableitems,decision,questions
-
+from dotenv import load_dotenv
+load_dotenv()
 from langchain_mistralai import ChatMistralAI
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
@@ -46,3 +47,4 @@ def extract_questions(transcript: str) -> str:
         "If none found say 'No open questions found.'"
     )
     return chain.invoke(transcript)
+
