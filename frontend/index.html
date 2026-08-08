@@ -1,74 +1,213 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AI Video Assistant</title>
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 
-    <title>AI Video Assistant</title>
+<!-- Markdown rendering -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.2/marked.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.1.5/purify.min.js"></script>
+
+<link rel="stylesheet" href="style.css" />
 </head>
-
 <body>
 
-    <h2>AI Video Assistant</h2>
+<!-- Ambient background -->
+<div class="bg-field" aria-hidden="true"></div>
 
-    <!-- File Upload -->
-    <input
-        type="file"
-        id="videoFile"
-        accept="audio/*,video/*"
-    >
+<div class="app-shell">
 
-    <br>
-    <br>
+  <!-- ============ HEADER ============ -->
+  <header class="app-header">
+    <div class="header-left">
+      <div class="brand-mark" aria-hidden="true">
+        <span class="wave-bar"></span>
+        <span class="wave-bar"></span>
+        <span class="wave-bar"></span>
+        <span class="wave-bar"></span>
+      </div>
+      <div class="brand-text">
+        <h1>AI Video Assistant</h1>
+        <p class="subtitle">Upload a meeting or video and chat with it using AI</p>
+      </div>
+    </div>
+    <div class="header-right">
+      <div class="status-pill" id="statusPill">
+        <span class="status-dot"></span>
+        <span>AI Ready</span>
+      </div>
+    </div>
+  </header>
 
-    <!-- Analyze Button -->
-    <button
-        id="analyzeBtn"
-        type="button"
-    >
-        Analyze
-    </button>
+  <main class="app-main">
 
-    <hr>
+    <!-- ============ ANALYZE CARD ============ -->
+    <section class="card analyze-card" id="analyzeSection">
+      <div class="card-heading">
+        <h2>Analyze a video</h2>
+        <p>Upload a file or paste a YouTube link to get a summary, action items and a searchable transcript.</p>
+      </div>
 
-    <!-- Title -->
-    <h3>Title</h3>
-    <p id="title"></p>
+      <div class="analyze-grid">
 
-    <!-- Summary -->
-    <h3>Summary</h3>
-    <p id="summary"></p>
+        <!-- Upload dropzone -->
+        <div class="dropzone" id="dropzone" tabindex="0" role="button" aria-label="Upload video file">
+          <input type="file" id="videoFile" accept="video/*,audio/*" hidden />
+          <div class="dropzone-icon">
+            <svg width="30" height="30" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 16V4M12 4L7 9M12 4L17 9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M4 16V18.5C4 19.8807 5.11929 21 6.5 21H17.5C18.8807 21 20 19.8807 20 18.5V16" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <p class="dropzone-title">Drop your video here</p>
+          <p class="dropzone-sub">or <span class="link-accent">browse files</span></p>
+          <div class="file-chip" id="fileChip" hidden>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" stroke="currentColor" stroke-width="1.6"/><path d="M14 2v6h6" stroke="currentColor" stroke-width="1.6"/></svg>
+            <span id="fileName">—</span>
+            <span class="file-size" id="fileSize"></span>
+            <button type="button" class="file-clear" id="fileClear" aria-label="Remove file">✕</button>
+          </div>
+        </div>
 
-    <!-- Action Items -->
-    <h3>Action Items</h3>
-    <p id="actionItems"></p>
+        <!-- Divider -->
+        <div class="or-divider" aria-hidden="true">
+          <span></span><em>OR</em><span></span>
+        </div>
 
-    <!-- Key Decisions -->
-    <h3>Key Decisions</h3>
-    <p id="keyDecisions"></p>
+        <!-- YouTube input -->
+        <div class="youtube-block">
+          <label for="youtubeUrl" class="field-label">YouTube URL</label>
+          <div class="input-with-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M22 8.5s-.2-1.6-.9-2.3c-.9-.9-1.8-.9-2.3-1C15.6 5 12 5 12 5h0s-3.6 0-6.8.2c-.5 0-1.4.1-2.3 1C2.2 6.9 2 8.5 2 8.5S1.8 10.3 1.8 12v1.9c0 1.7.2 3.5.2 3.5s.2 1.6.9 2.3c.9.9 2 .9 2.5 1 1.8.2 7.6.2 7.6.2s3.6 0 6.8-.2c.5 0 1.4-.1 2.3-1 .7-.7.9-2.3.9-2.3s.2-1.8.2-3.5V12c0-1.7-.2-3.5-.2-3.5z" stroke="currentColor" stroke-width="1.3"/><path d="M10 15.2V9.3l5.2 3z" fill="currentColor"/></svg>
+            <input type="url" id="youtubeUrl" placeholder="Paste a YouTube URL..." autocomplete="off" />
+          </div>
 
-    <!-- Open Questions -->
-    <h3>Open Questions</h3>
-    <p id="openQuestions"></p>
+          <label for="language" class="field-label">Language</label>
+          <div class="select-wrap">
+            <select id="language">
+              <option value="english">English</option>
+              <option value="hinglish">Hinglish</option>
+            </select>
+            <svg class="select-caret" width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+        </div>
+      </div>
 
-    <!-- Transcript -->
-    <h3>Transcript</h3>
+      <button type="button" id="analyzeBtn" class="btn-primary">
+        <span class="btn-label">Analyze video</span>
+        <span class="btn-spinner" hidden></span>
+      </button>
 
-    <textarea
-        id="transcript"
-        rows="15"
-        cols="100"
-        readonly
-    ></textarea>
+      <!-- Error banner -->
+      <div class="error-banner" id="analyzeError" hidden>
+        <div class="error-icon">!</div>
+        <div class="error-body">
+          <p class="error-title">Analysis failed</p>
+          <p class="error-msg" id="analyzeErrorMsg"></p>
+        </div>
+      </div>
+    </section>
 
-    <!-- JavaScript -->
-    <script src="./app.js"></script>
+    <!-- ============ LOADING STATE ============ -->
+    <section class="card loading-card" id="loadingSection" hidden>
+      <div class="loading-header">
+        <div class="loading-wave" aria-hidden="true">
+          <span></span><span></span><span></span><span></span><span></span>
+        </div>
+        <h3>Analyzing your video&hellip;</h3>
+      </div>
+      <ul class="loading-steps" id="loadingSteps">
+        <li data-step="0"><span class="step-icon"></span>Source detected</li>
+        <li data-step="1"><span class="step-icon"></span>Audio processing</li>
+        <li data-step="2"><span class="step-icon"></span>Generating AI insights</li>
+        <li data-step="3"><span class="step-icon"></span>Preparing results</li>
+      </ul>
+    </section>
 
+    <!-- ============ RESULTS DASHBOARD ============ -->
+    <section class="results" id="resultsSection" hidden>
+
+      <div class="card title-card">
+        <!-- <span class="eyebrow">Title</span> -->
+         <h3 class = 'eyebrow'>Title</h3>
+        <h2 id="resultTitle"></h2>
+      </div>
+
+      <div class="card">
+        <div class="card-heading-row">
+          <h3>Summary</h3>
+        </div>
+        <div class="markdown-body" id="resultSummary"></div>
+      </div>
+
+      <div class="results-triptych">
+        <div class="card">
+          <div class="card-heading-row">
+            <h3>Action items</h3>
+          </div>
+          <div class="markdown-body" id="resultActionItems"></div>
+        </div>
+        <div class="card">
+          <div class="card-heading-row">
+            <h3>Key decisions</h3>
+          </div>
+          <div class="markdown-body" id="resultKeyDecisions"></div>
+        </div>
+        <div class="card">
+          <div class="card-heading-row">
+            <h3>Open questions</h3>
+          </div>
+          <div class="markdown-body" id="resultOpenQuestions"></div>
+        </div>
+      </div>
+
+      <div class="card transcript-card">
+        <div class="card-heading-row">
+          <h3>Transcript</h3>
+          <div class="input-with-icon transcript-search">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.6"/><path d="M21 21l-4.3-4.3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+            <input type="text" id="transcriptSearch" placeholder="Search transcript..." />
+          </div>
+        </div>
+        <div class="transcript-viewer" id="transcriptViewer"></div>
+      </div>
+    </section>
+
+    <!-- ============ CHAT SECTION ============ -->
+    <section class="card chat-card" id="chatSection">
+      <div class="card-heading-row">
+        <h3>Ask about this video</h3>
+        <span class="hint">Enter to send · Shift+Enter for a new line</span>
+      </div>
+
+      <div class="chat-box" id="chatBox">
+        <div class="chat-empty" id="chatEmpty">
+          <p>Analyze a video, then ask anything about it — decisions, action items, quotes, timelines.</p>
+        </div>
+      </div>
+
+      <form class="chat-input-row" id="chatForm">
+        <textarea id="question" rows="1" placeholder="Ask a question about this video..."></textarea>
+        <button type="submit" id="sendBtn" class="btn-send" aria-label="Send message">
+          <svg class="send-icon" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M22 2L11 13" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M22 2L15 22l-4-9-9-4 20-7z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span class="btn-spinner" hidden></span>
+        </button>
+      </form>
+    </section>
+
+  </main>
+
+  <footer class="app-footer">
+    <span>AI Video Assistant &middot; powered by your FastAPI backend</span>
+  </footer>
+</div>
+
+<script src="app.js"></script>
 </body>
-
 </html>
